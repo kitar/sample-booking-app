@@ -39,3 +39,14 @@ export async function getUserId(): Promise<string | null> {
   const { data } = await supabase.auth.getClaims();
   return data?.claims?.sub ?? null;
 }
+
+// 社員として登録されている利用者か
+export async function isStaff(userId: string): Promise<boolean> {
+  const supabase = createDataClient();
+  const { data } = await supabase
+    .from("staff")
+    .select("user_id")
+    .eq("user_id", userId)
+    .maybeSingle();
+  return data !== null;
+}
